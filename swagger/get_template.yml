@@ -1,0 +1,25 @@
+# Below is an example of the contents of this type of YAML file
+
+# tags:
+#  - name: Guests
+# summary: Get all guests
+# description: Retrieve a list of all guests
+
+# responses:
+#  200:
+#    description: A list of guests
+#    schema:
+#      type: array
+#      items:
+#        type: object
+#        properties:
+#          id:
+#            type: integer
+#            example: 1
+#          name:
+#            type: string
+#            example: John Doe
+#  404:
+#    description: No guests found
+#  500:
+#    description: Internal server error
