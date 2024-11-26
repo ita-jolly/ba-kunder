@@ -17,8 +17,8 @@ swagger_config = {
 
 template = {
     "info": {
-        "title": "Kong Arthurs Hotel Case API",
-        "description": "API for Kong Arthurs Hotel Case",
+        "title": "Bilabonnement Eksamens API",
+        "description": "API for Bilabonnement Eksamen",
         "version": "1.0.0",
     },
     "securityDefinitions": {
