@@ -15,7 +15,7 @@ db_service.init()
 
 @app.route('/')
 def index():
-  return "Welcome to API"
+  return "Welcome to Kunder API"
 
 
 # @app.route('/gettemplate', methods=['GET'])
