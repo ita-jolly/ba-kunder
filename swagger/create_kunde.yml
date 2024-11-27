@@ -1,0 +1,60 @@
+summary: Create a new customer
+description: Endpoint to create a new customer in the database.
+parameters:
+  - name: body
+    in: body
+    required: true
+    description: The details of the customer to be created
+    schema:
+        type: object
+        properties:
+          adresse:
+            type: string
+            example: Testvej 1
+          cpr:
+            type: integer
+            example: 1234567890
+          email:
+            type: string
+            example: test@testmail.dk
+          navn:
+            type: string
+            example: Test Testesen
+          tlf:
+            type: string
+            example: "12345678"
+tags:
+  - Kunder
+responses:
+  201:
+    description: Customer successfully created
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            cpr:
+              type: integer
+              description: CPR number of the created customer
+            navn:
+              type: string
+              description: Full name of the customer
+            tlf:
+              type: string
+              description: Phone number of the customer
+            email:
+              type: string
+              description: Email address of the customer
+            adresse:
+              type: string
+              description: Address of the customer
+  400:
+    description: Invalid input or customer already exists
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Error message explaining why the request failed

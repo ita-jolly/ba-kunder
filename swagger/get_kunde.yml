@@ -1,0 +1,55 @@
+summary: Retrieve a specific customer by CPR number
+description: Fetches a customer from the database using their CPR number. The CPR must be 10 digits. Returns a 404 if the customer is not found.
+parameters:
+  - name: cpr
+    in: path
+    required: true
+    description: The 10-digit CPR number of the customer.
+    schema:
+      type: integer
+      example: 1234567890
+tags:
+  - Kunder
+responses:
+  200:
+    description: The requested customer's details
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            adresse:
+              type: string
+              example: Testvej 1
+            cpr:
+              type: integer
+              example: 1234567890
+            email:
+              type: string
+              example: test@testmail.dk
+            navn:
+              type: string
+              example: Test Testesen
+            tlf:
+              type: string
+              example: "12345678"
+  400:
+    description: Invalid CPR format
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: CPR skal være 10 cifre
+  404:
+    description: Customer not found
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: Kunde ikke fundet
