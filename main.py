@@ -1,4 +1,5 @@
 import os
+import re
 from flask import Flask, request, jsonify, make_response
 import db_service
 from flasgger import Swagger, swag_from
@@ -48,10 +49,47 @@ def get_kunde(cpr):
     return response
 
 
-# @app.route('/gettemplate', methods=['GET'])
-# @swag_from('swagger/get_template.yml')
-# def get_guests():
-#  return "got template"
+@app.route('/kunder', methods=['POST'])
+@swag_from('swagger/create_kunde.yml')
+def create_kunde():
+    data = request.get_json()
+
+    cpr = data.get('cpr')
+    navn = data.get('navn')
+    tlf = data.get('tlf')
+    email = data.get('email')
+    adresse = data.get('adresse')
+
+    if cpr is None or navn is None or tlf is None or email is None or adresse is None:
+        response = make_response({'message': 'Alle felter skal udfyldes'}, 400)
+        return response
+
+    # Check for duplicates
+    kunde = db_service.get_kunde(cpr)
+    if kunde is not None:
+        response = make_response({'message': 'Kunde eksisterer allerede'}, 400)
+        return response
+
+    # Check for cpr legitimacy
+    if not re.match(r'^(0[1-9]|[12]\d|3[01])(0[1-9]|1[0-2])\d{2}[-]?\d{4}$', cpr):
+        response = make_response({'message': 'CPR Invalid'}, 400)
+        return response
+
+    # Check for tlf legitimacy
+    if len(tlf) != 8:
+        response = make_response({'message': 'Telefonnummer Invalid'}, 400)
+        return response
+
+    # Check for email legitimacy
+    if not re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email):
+        response = make_response({'message': 'Email Invalid'}, 400)
+        return response
+
+    ny_kunde = db_service.create_kunde(cpr, navn, tlf, email, adresse)
+
+    response = make_response(ny_kunde, 201)
+
+    return response
 
 if __name__ == '__main__':
     app.run()

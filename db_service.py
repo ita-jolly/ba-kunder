@@ -52,3 +52,16 @@ def get_kunde(cpr):
         kunde = {'cpr': row[0], 'navn': row[1], 'tlf': row[2], 'email': row[3], 'adresse': row[4]}
 
         return kunde
+
+def create_kunde(cpr, navn, tlf, email, adresse):
+    with sqlite3.connect(db_path) as conn:
+        cur = conn.cursor()
+        cur.execute('INSERT INTO kunder (cpr, navn, tlf, email, adresse) VALUES (?, ?, ?, ?, ?)', (cpr, navn, tlf, email, adresse))
+        conn.commit()
+
+        cur.execute('SELECT * FROM kunder WHERE cpr = ?', (cpr,))
+        row = cur.fetchone()
+
+        if row is None:
+            return None
+        return row
