@@ -64,4 +64,4 @@ def create_kunde(cpr, navn, tlf, email, adresse):
 
         if row is None:
             return None
-        return row
+        return {'cpr': row[0], 'navn': row[1], 'tlf': row[2], 'email': row[3], 'adresse': row[4]}

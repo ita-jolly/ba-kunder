@@ -71,7 +71,7 @@ def create_kunde():
         return response
 
     # Check for cpr legitimacy
-    if not re.match(r'^(0[1-9]|[12]\d|3[01])(0[1-9]|1[0-2])\d{2}[-]?\d{4}$', cpr):
+    if not re.match(r'^(0[1-9]|[12]\d|3[01])(0[1-9]|1[0-2])\d{2}[-]?\d{4}$', str(cpr)):
         response = make_response({'message': 'CPR Invalid'}, 400)
         return response
 
@@ -87,7 +87,7 @@ def create_kunde():
 
     ny_kunde = db_service.create_kunde(cpr, navn, tlf, email, adresse)
 
-    response = make_response(ny_kunde, 201)
+    response = make_response(jsonify(ny_kunde), 201)
 
     return response
 
