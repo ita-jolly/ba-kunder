@@ -31,7 +31,7 @@ def get_kunder():
     return response
 
 
-@app.route('/kunder/<int:cpr>', methods=['GET'])
+@app.route('/kunder/<string:cpr>', methods=['GET'])
 @swag_from('swagger/get_kunde.yml')
 def get_kunde(cpr):
     # Check for cpr legitimacy
@@ -52,40 +52,47 @@ def get_kunde(cpr):
 @app.route('/kunder', methods=['POST'])
 @swag_from('swagger/create_kunde.yml')
 def create_kunde():
+
     data = request.get_json()
+    required_fields = ['cpr', 'navn', 'tlf', 'email', 'adresse']
 
-    cpr = data.get('cpr')
-    navn = data.get('navn')
-    tlf = data.get('tlf')
-    email = data.get('email')
-    adresse = data.get('adresse')
+    if not all(field in data for field in required_fields):
+            return jsonify({"error": "Missing required fields"}), 400
 
-    if cpr is None or navn is None or tlf is None or email is None or adresse is None:
-        response = make_response({'message': 'Alle felter skal udfyldes'}, 400)
-        return response
+    # Check if kunde already exists
+    cpr = str(data['cpr'])
+    kunder = db_service.get_kunder()
+    if kunder is None:
+        return jsonify({"error": "Could not communicate with the kunder database"}), 500
 
-    # Check for duplicates
-    kunde = db_service.get_kunde(cpr)
-    if kunde is not None:
-        response = make_response({'message': 'Kunde eksisterer allerede'}, 400)
-        return response
+    matching_kunde = next((kunde for kunde in kunder if str(kunde['cpr']) == cpr), None)
+    if matching_kunde:
+        return jsonify({"error": f"Cpr {cpr} already exists in kunder database"}), 400
 
     # Check for cpr legitimacy
-    if not re.match(r'^(0[1-9]|[12]\d|3[01])(0[1-9]|1[0-2])\d{2}[-]?\d{4}$', str(cpr)):
+    if not re.match(r'^(0[1-9]|[12][0-9]|3[01])(0[1-9]|1[0-2])\d{2}[-]?\d{4}$', str(cpr)):
         response = make_response({'message': 'CPR Invalid'}, 400)
         return response
 
     # Check for tlf legitimacy
+    tlf = str(data['tlf'])
     if len(tlf) != 8:
         response = make_response({'message': 'Telefonnummer Invalid'}, 400)
         return response
 
     # Check for email legitimacy
+    email = data['email']
     if not re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email):
         response = make_response({'message': 'Email Invalid'}, 400)
         return response
 
-    ny_kunde = db_service.create_kunde(cpr, navn, tlf, email, adresse)
+    ny_kunde = db_service.create_kunde(
+        cpr=data['cpr'],
+        navn=data['navn'],
+        tlf=data['tlf'],
+        email=data['email'],
+        adresse=data['adresse']
+    )
 
     response = make_response(jsonify(ny_kunde), 201)
 

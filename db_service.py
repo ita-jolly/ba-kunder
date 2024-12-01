@@ -10,7 +10,7 @@ def init():
     with sqlite3.connect(db_path) as conn:
         cur = conn.cursor()
         cur.execute('''CREATE TABLE IF NOT EXISTS kunder (
-                cpr INTEGER PRIMARY KEY,
+                cpr TEXT PRIMARY KEY,
                 navn TEXT,
                 tlf TEXT,
                 email TEXT,
