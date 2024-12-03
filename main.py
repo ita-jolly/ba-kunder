@@ -35,8 +35,8 @@ def get_kunder():
 @swag_from('swagger/get_kunde.yml')
 def get_kunde(cpr):
     # Check for cpr legitimacy
-    if len(str(cpr)) != 10:
-        response = make_response({'message': 'CPR skal være 10 cifre'}, 400)
+    if not re.match(r'^(0[1-9]|[12][0-9]|3[01])(0[1-9]|1[0-2])\d{2}[-]?\d{4}$', str(cpr)):
+        response = make_response({'message': 'CPR Invalid'}, 400)
         return response
 
     kunde = db_service.get_kunde(cpr)

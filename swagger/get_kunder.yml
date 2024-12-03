@@ -16,8 +16,8 @@ responses:
                   type: string
                   example: Testvej 1
                 cpr:
-                  type: integer
-                  example: 1234567890
+                  type: string
+                  example: "1234567890"
                 email:
                   type: string
                   example: test@testmail.dk
