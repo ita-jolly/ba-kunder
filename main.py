@@ -16,7 +16,32 @@ db_service.init()
 
 @app.route('/')
 def index():
-    return "Welcome to Kunder API"
+    endpoints = [
+        {
+            "path": "/apidocs",
+            "method": "GET",
+            "description": "Endpoint documentation"
+        },
+        {
+            "path": "/kunder",
+            "method": "GET",
+            "description": "Get kunder"
+        },
+        {
+            "path": "/kunder/<string:cpr>",
+            "method": "GET",
+            "description": "Get kunde by CPR"
+        },
+        {
+            "path": "/kunder",
+            "method": "POST",
+            "description": "Create kunde"
+        }
+    ]
+    return jsonify({
+        "Service": "ba-kunder Microservice",
+        "Available endpoints": endpoints
+    })
 
 @app.route('/kunder', methods=['GET'])
 @swag_from('swagger/get_kunder.yml')
