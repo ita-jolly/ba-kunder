@@ -22,7 +22,7 @@ def init():
 
         if row_count == 0:
             cur.execute(''' INSERT INTO kunder (cpr, navn, tlf, email, adresse)
-                        VALUES (1234567890, 'Test Testesen', '12345678', 'test@testmail.dk', 'Testvej 1')
+                        VALUES ('1234567890', 'Test Testesen', '12345678', 'test@testmail.dk', 'Testvej 1')
                         ''')
 
     conn.commit()
